@@ -21,16 +21,28 @@ pub fn default(config: &Config, connection: &mut Connection) -> Result<(), Strin
     let suninfo = SunInfo::try_from(config)?;
     log::debug!("{suninfo:?}");
 
-    let new_brightness = brightness::calculate(&config, &suninfo);
+    let new_brightness = brightness::calculate(config, &suninfo);
     log::debug!("New brightness: {new_brightness}");
 
     let cur_brightness = connection.get(config)?;
     log::debug!("Current brightness: {cur_brightness}");
 
     if new_brightness != cur_brightness {
+        // create smooth transition
+        let transition = |from: u8, to: u8| {
+            let mut values: Vec<_> = (from.min(to)..=from.max(to)).step_by(10).collect();
+            if from > to {
+                values.reverse();
+            }
+            values
+        };
+
         log::info!("Change {cur_brightness} -> {new_brightness}");
-        if !connection.set(config, new_brightness)? {
-            log::warn!("Brightness not changed");
+        for value in transition(cur_brightness, new_brightness) {
+            if !connection.set(config, value)? {
+                log::warn!("Brightness not changed");
+                return Ok(());
+            }
         }
     }
 
