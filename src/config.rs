@@ -12,6 +12,8 @@ pub struct Coord {
 pub struct Clock {
     pub timezone: i32,
     pub server: String,
+    #[serde(default = "date_fmt_default")]
+    pub date_fmt: String,
 }
 
 #[derive(Debug, Copy, Clone, Deserialize)]
@@ -33,4 +35,8 @@ impl Config {
         let data = fs::read_to_string(filename).map_err(|_| "Cannot load config file")?;
         Ok(serde_yaml::from_str(&data).map_err(|_| "Cannot parse config")?)
     }
+}
+
+fn date_fmt_default() -> String {
+    "%Y-%m-%d %H:%M".to_string()
 }

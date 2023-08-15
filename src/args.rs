@@ -6,6 +6,7 @@ use argh::FromArgs;
 pub enum CliCommand {
     Get(GetOptions),
     Set(SetOptions),
+    SunInfo(SunInfoOptions),
 }
 
 #[derive(FromArgs)]
@@ -21,6 +22,11 @@ pub struct SetOptions {
     /// new value
     pub value: u8,
 }
+
+#[derive(FromArgs)]
+#[argh(subcommand, name = "suninfo")]
+/// Get todays sunrise and sunset info
+pub struct SunInfoOptions {}
 
 /// Gixie Clock Brightness Control
 #[derive(FromArgs)]

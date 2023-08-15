@@ -17,12 +17,10 @@ fn main() -> Result<(), String> {
     let config = config::Config::load(&arg.config)?;
     log::debug!("{config:?}");
 
-    let mut connection = brightness::Connection::connect(&config)?;
-    log::debug!("Establish websocket connection");
-
     match arg.cli {
-        Some(args::CliCommand::Get(_)) => command::get(&config, &mut connection),
-        Some(args::CliCommand::Set(SetOptions { value })) => command::set(&config, &mut connection, value),
-        None => command::default(&config, &mut connection),
+        Some(args::CliCommand::Get(_)) => command::get(&config),
+        Some(args::CliCommand::Set(SetOptions { value })) => command::set(&config, value),
+        Some(args::CliCommand::SunInfo(_)) => command::suninfo(&config),
+        None => command::default(&config),
     }
 }
