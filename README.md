@@ -4,26 +4,27 @@ Gixie Clock Brightness Control
 Automatic brightness control depending on the time of day
 
 ## How to build
+_If you do not need to build for the ARM platform, then just remove `.cargo` folder._
+
 ```bash
 $ rustup target add armv7-unknown-linux-musleabihf
 $ cargo build --release
 ```
 
-If you do not need to build for the ARM platform, then edit the file `.cargo/config.toml` (__build__ section).
-
 ## How to use
 - create `config.yaml`
 ```yaml
-coord:                      # map position
+coord:                       # map position
   latitude: 59.33258
   longitude: 18.06490
 clock:
-  timezone: 1               # your clock time zone
-  server: ws://127.0.0.1    # gixie clock websocket server
+  timezone: 1                # your clock time zone
+  server: "ws://127.0.0.1"   # gixie clock websocket server
+  date_fmt: "%Y-%m-%d %H:%M" # date format for suninfo command
 brightness:
-  min: 10                   # nighttime brightness
-  max: 250                  # daytime brightness
-  num: 14                   # gixie clock cmdNum
+  min: 10                    # nighttime brightness
+  max: 250                   # daytime brightness
+  num: 14                    # gixie clock cmdNum
 ```
 
 - launch
@@ -31,7 +32,7 @@ brightness:
 $ gixie-bright-control -c config.yaml
 ```
 
-- or just use as cli
+- or just use as cli app
 ```bash
 $ gixie-bright-control get
 10
