@@ -24,6 +24,7 @@ clock:
 brightness:
   min: 10                    # nighttime brightness
   max: 250                   # daytime brightness
+  step: 10                   # smooth transition step
   num: 14                    # gixie clock cmdNum
 ```
 
@@ -36,7 +37,7 @@ $ gixie-bright-control -c config.yaml
 ```bash
 $ gixie-bright-control get
 10
-$ gixie-bright-control set 100
+$ gixie-bright-control set -s 100
 $ gixie-bright-control suninfo
 sunrise: 2042-08-15 04:20
  sunset: 2042-08-15 20:07

@@ -18,6 +18,10 @@ pub struct GetOptions {}
 #[argh(subcommand, name = "set")]
 /// Set new brightness
 pub struct SetOptions {
+    /// enable smooth transition
+    #[argh(switch, short = 's')]
+    pub smooth: bool,
+
     #[argh(positional)]
     /// new value
     pub value: u8,

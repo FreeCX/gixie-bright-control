@@ -20,6 +20,7 @@ pub struct Clock {
 pub struct Brightness {
     pub min: u8,
     pub max: u8,
+    pub step: u8,
     pub num: u8,
 }
 

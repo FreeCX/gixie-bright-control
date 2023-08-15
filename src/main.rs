@@ -19,7 +19,7 @@ fn main() -> Result<(), String> {
 
     match arg.cli {
         Some(args::CliCommand::Get(_)) => command::get(&config),
-        Some(args::CliCommand::Set(SetOptions { value })) => command::set(&config, value),
+        Some(args::CliCommand::Set(SetOptions { smooth, value })) => command::set(&config, smooth, value),
         Some(args::CliCommand::SunInfo(_)) => command::suninfo(&config),
         None => command::default(&config),
     }
