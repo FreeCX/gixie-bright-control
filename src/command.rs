@@ -1,9 +1,10 @@
 use crate::brightness;
 use crate::config::Config;
 use crate::connection::Connection;
+use crate::error::Result;
 use crate::suninfo::SunInfo;
 
-pub fn get(config: &Config) -> Result<(), String> {
+pub fn get(config: &Config) -> Result<()> {
     let mut connection = Connection::connect(config)?;
 
     println!("{}", connection.get(config)?);
@@ -11,21 +12,19 @@ pub fn get(config: &Config) -> Result<(), String> {
     Ok(())
 }
 
-pub fn set(config: &Config, smooth: bool, new_brightness: u8) -> Result<(), String> {
+pub fn set(config: &Config, smooth: bool, new_brightness: u8) -> Result<()> {
     let mut connection = Connection::connect(config)?;
 
     if smooth {
         let _ = transition(config, &mut connection, new_brightness);
-    } else {
-        if !connection.set(config, new_brightness)? {
-            log::warn!("Brightness not changed");
-        }
+    } else if !connection.set(config, new_brightness)? {
+        log::warn!("Brightness not changed");
     }
 
     Ok(())
 }
 
-pub fn transition(config: &Config, connection: &mut Connection, new_brightness: u8) -> Result<bool, String> {
+pub fn transition(config: &Config, connection: &mut Connection, new_brightness: u8) -> Result<bool> {
     // create smooth transition
     let smooth_transition = |from: u8, to: u8| {
         let step = config.brightness.step.into();
@@ -56,7 +55,7 @@ pub fn transition(config: &Config, connection: &mut Connection, new_brightness: 
     Ok(true)
 }
 
-pub fn suninfo(config: &Config) -> Result<(), String> {
+pub fn suninfo(config: &Config) -> Result<()> {
     log::debug!("Calculate sun info data");
     let suninfo = SunInfo::try_from(config)?;
     log::debug!("{suninfo:?}");
@@ -67,7 +66,7 @@ pub fn suninfo(config: &Config) -> Result<(), String> {
     Ok(())
 }
 
-pub fn default(config: &Config) -> Result<(), String> {
+pub fn default(config: &Config) -> Result<()> {
     log::debug!("Calculate sun info data");
     let suninfo = SunInfo::try_from(config)?;
     log::debug!("{suninfo:?}");
