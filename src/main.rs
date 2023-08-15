@@ -8,11 +8,11 @@ pub mod connection;
 pub mod error;
 pub mod suninfo;
 
-fn main() -> Result<(), String> {
+fn main() -> error::Result<()> {
     let arg: args::Arguments = argh::from_env();
 
     let level = if arg.verbose { log::Level::Debug } else { log::Level::Info };
-    simple_logger::init_with_level(level).map_err(|_| "Cannot init logger")?;
+    simple_logger::init_with_level(level)?;
 
     log::debug!("Load config from `{}`", arg.config);
     let config = config::Config::load(&arg.config)?;

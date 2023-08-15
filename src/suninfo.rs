@@ -1,4 +1,5 @@
 use crate::config::Config;
+use crate::error::{AppError, Error};
 
 use chrono::{DateTime, Datelike, FixedOffset, NaiveDateTime, TimeZone, Utc};
 use sunrise_sunset_calculator::SunriseSunsetParameters;
@@ -11,12 +12,12 @@ pub struct SunInfo {
 }
 
 impl TryFrom<&Config> for SunInfo {
-    type Error = String;
+    type Error = Error;
 
     fn try_from(config: &Config) -> Result<Self, Self::Error> {
         let hour = 3600;
 
-        let timezone = FixedOffset::east_opt(config.clock.timezone * hour).ok_or("Cannot construct timezone")?;
+        let timezone = FixedOffset::east_opt(config.clock.timezone * hour).ok_or(AppError::TimezoneConstruct)?;
         let now = Utc::now().with_timezone(&timezone);
         log::debug!("current datetime: {now}");
 
@@ -24,19 +25,17 @@ impl TryFrom<&Config> for SunInfo {
         let midday = timezone
             .with_ymd_and_hms(now.year(), now.month(), now.day(), 12, 0, 0)
             .single()
-            .ok_or("Cannot construct midday")?
+            .ok_or(AppError::MiddayConstruct)?
             .timestamp();
 
-        let result = SunriseSunsetParameters::new(midday, config.coord.latitude, config.coord.longitude)
-            .calculate()
-            .map_err(|_| "Cannot calculate SunriseSunsetParameters")?;
+        let result = SunriseSunsetParameters::new(midday, config.coord.latitude, config.coord.longitude).calculate()?;
         log::debug!("{result:?}");
 
         let from_timestamp = |timestamp, timezone| {
             NaiveDateTime::from_timestamp_opt(timestamp, 0)
                 .as_ref()
                 .map(|dt| Utc.from_utc_datetime(dt))
-                .ok_or("Cannot parse timestamp")
+                .ok_or(AppError::TimestampParse)
                 .map(|dt| dt.with_timezone(timezone))
         };
 

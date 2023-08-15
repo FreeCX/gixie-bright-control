@@ -1,5 +1,7 @@
 use std::fs;
 
+use crate::error::Result;
+
 use serde::Deserialize;
 
 #[derive(Debug, Copy, Clone, Deserialize)]
@@ -32,9 +34,9 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn load(filename: &str) -> Result<Config, String> {
-        let data = fs::read_to_string(filename).map_err(|_| "Cannot load config file")?;
-        Ok(serde_yaml::from_str(&data).map_err(|_| "Cannot parse config")?)
+    pub fn load(filename: &str) -> Result<Config> {
+        let data = fs::read_to_string(filename)?;
+        Ok(serde_yaml::from_str(&data)?)
     }
 }
 
