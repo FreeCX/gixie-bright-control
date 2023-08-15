@@ -4,6 +4,7 @@ pub mod args;
 pub mod brightness;
 pub mod command;
 pub mod config;
+pub mod connection;
 pub mod error;
 pub mod suninfo;
 

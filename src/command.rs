@@ -1,5 +1,6 @@
-use crate::brightness::{self, Connection};
+use crate::brightness;
 use crate::config::Config;
+use crate::connection::Connection;
 use crate::suninfo::SunInfo;
 
 pub fn get(config: &Config) -> Result<(), String> {
