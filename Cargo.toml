@@ -20,4 +20,5 @@ sunrise-sunset-calculator = "1.0"
 debug = false
 opt-level = 3
 lto = true
-strip = "debuginfo"
+strip = true
+panic = "abort"

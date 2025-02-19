@@ -4,7 +4,7 @@ Gixie Clock Brightness Control
 Automatic brightness control depending on the time of day
 
 ## How to build
-_If you do not need to build for the ARM platform, then just remove `.cargo` folder._
+_If you don't need to build for the ARM platform, then remove `.cargo` folder._
 
 ```bash
 $ rustup target add armv7-unknown-linux-musleabihf
